@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Lesson 4 – My Life in the Village</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #d4c5b2;
+      background-image: radial-gradient(circle at 20% 30%, #e0d0c0 5%, #c4b49a 80%);
+      padding: 15px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .tablet {
+      max-width: 900px;
+      width: 100%;
+      background: #fefef9;
+      border-radius: 48px;
+      padding: 25px 30px;
+      box-shadow: 0 0 0 6px #3a3a3a, 0 0 0 10px #1e1e1e, 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .tablet::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 6px;
+      background: #2c2c2c;
+      border-radius: 10px;
+    }
+    .tablet::after {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: calc(50% + 60px);
+      width: 10px;
+      height: 10px;
+      background: #1a1a1a;
+      border-radius: 50%;
+    }
+    .home-btn {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #555;
+      border-radius: 50%;
+      margin: 20px auto 0;
+      background: #f0f0f0;
+      cursor: pointer;
+    }
+    h1 { font-size: clamp(22px, 5vw, 34px); color: #2c3e50; margin-bottom: 5px; text-align: center; }
+    .blog-meta { text-align: center; color: #7f8c8d; font-size: clamp(13px, 2.5vw, 16px); margin-bottom: 20px; }
+
+    .main-tabs {
+      display: flex; gap: 6px; margin-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0; flex-wrap: wrap; justify-content: center;
+    }
+    .tab-btn {
+      background: none; border: none; padding: 10px 14px;
+      font-size: clamp(12px, 2vw, 15px); font-weight: 600; color: #7f8c8d;
+      cursor: pointer; border-bottom: 4px solid transparent; transition: 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      color: #e67e22; border-bottom-color: #e67e22; background: #fef5ec;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .game-section { margin-top: 15px; }
+
+    .blog-story {
+      font-size: clamp(16px, 2.8vw, 20px); line-height: 1.7;
+      color: #2c3e50; padding: 15px 0;
+    }
+    .blog-story p { margin-bottom: 18px; }
+    .blog-img {
+      width: 100%; max-width: 380px; border-radius: 24px;
+      margin: 15px auto; display: block;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .highlight { background: #fef3c7; border-radius: 6px; padding: 2px 6px; }
+
+    .collapsible-header {
+      cursor: pointer; padding: 10px 16px;
+      background: #fef5ec; border-radius: 14px;
+      font-weight: 600; font-size: clamp(14px, 2.5vw, 17px);
+      display: flex; justify-content: space-between; align-items: center;
+      border: 2px solid #fad7a0; margin-bottom: 8px;
+    }
+    .collapsible-body { display: none; padding: 10px 0; }
+    .collapsible-body.open { display: block; }
+
+    .btn {
+      padding: 10px 20px; border-radius: 25px;
+      font-size: clamp(14px, 2.5vw, 18px);
+      font-weight: 700; border: none; cursor: pointer; transition: 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+    .btn-orange { background: #e67e22; color: white; }
+    .btn-orange:hover { background: #d35400; transform: scale(1.02); }
+    .btn-outline {
+      background: white; border: 2px solid #e67e22; color: #e67e22;
+      padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer;
+    }
+    .btn-outline:hover { background: #fef5ec; }
+    .btn-outline.active { background: #e67e22; color: white; }
+
+    .choose-card, .translate-card {
+      border: 2px solid #fad7a0; border-radius: 18px;
+      padding: 16px 20px; margin: 10px auto;
+      background: #fffaf3; display: flex; align-items: center;
+      gap: 10px; flex-wrap: wrap; max-width: 600px;
+      font-size: clamp(17px, 3vw, 22px); color: #2c3e50;
+    }
+    .select-tense {
+      font-size: clamp(16px, 2.5vw, 20px); padding: 6px 12px;
+      border-radius: 10px; border: 2px solid #e67e22;
+      background: white; font-weight: bold; cursor: pointer;
+    }
+    .transform-input, .translate-input {
+      font-size: clamp(16px, 2.5vw, 22px); padding: 8px 14px;
+      border-radius: 10px; border: 2px solid #e67e22;
+      width: 100%; max-width: 500px; margin-top: 8px;
+    }
+    .feedback { font-size: clamp(14px, 2.5vw, 18px); text-align: center; margin: 8px 0; }
+
+    .match-column { display: flex; flex-direction: column; gap: 8px; min-width: 140px; }
+    .match-item {
+      padding: 8px 14px; border-radius: 12px; font-size: clamp(13px, 2vw, 16px);
+      font-weight: 500; cursor: pointer; border: 2px solid #e0e0e0;
+      background: #fafafa; text-align: center; transition: 0.2s;
+    }
+    .match-item:hover { background: #fef5ec; }
+    .match-item.selected { border-color: #e67e22; background: #fef5ec; }
+    .match-item.matched { border-color: #27ae60; background: #e8f8f5; }
+
+    .retell-plan {
+      background: #fef5ec; border: 2px solid #fad7a0;
+      border-radius: 16px; padding: 15px 20px; margin: 15px 0;
+      font-size: clamp(14px, 2.3vw, 17px); line-height: 1.8;
+    }
+    .retell-hidden { display: none; }
+    .level-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
+
+    @media (max-width: 600px) {
+      .tablet { padding: 15px 18px; border-radius: 32px; }
+      .tablet::before, .tablet::after { display: none; }
+      .tab-btn { padding: 8px 10px; font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+<div class="tablet">
+  <h1>🌾 My Village Life</h1>
+  <div class="blog-meta">Anna's Blog · Lesson 4</div>
+
+  <div class="main-tabs">
+    <button class="tab-btn active" data-tab="tab-story">📖 Story</button>
+    <button class="tab-btn" data-tab="tab-vocab">📝 Vocab</button>
+    <button class="tab-btn" data-tab="tab-truefalse">✅ True/False</button>
+    <button class="tab-btn" data-tab="tab-questions">❓ Questions</button>
+    <button class="tab-btn" data-tab="tab-fill">🔤 Fill Gaps</button>
+    <button class="tab-btn" data-tab="tab-tense">⏳ Tense</button>
+    <button class="tab-btn" data-tab="tab-translate">🌐 Translate</button>
+    <button class="tab-btn" data-tab="tab-retell">🗣️ Retell</button>
+  </div>
+
+  <!-- Story -->
+  <div id="tab-story" class="tab-content active">
+    <div style="text-align:center;margin-bottom:15px;">
+      <button class="btn btn-orange" id="audioBtn">🔊 Play Audio</button>
+    </div>
+    <div class="blog-story" id="storyText">
+      <p class="text-sentence"><strong>Hi! My name is Anna.</strong> I live in a small village with my family. Let me tell you about my life here. It's very different from the city!</p>
+      <img src="anna-writing.jpg" class="blog-img" alt="Anna writing" onerror="this.style.display='none'">
+      <p class="text-sentence"><strong>Right now</strong>, I am sitting in my room and I am writing this story for you. Outside, the sun is setting, and the village is going to sleep. It's my favourite time of the day — everything is quiet and peaceful. I can hear the birds singing their last songs. <strong>At the moment</strong>, my dog Rex is sleeping on the floor next to me. He looks so happy!</p>
+      <p class="text-sentence">Now let me tell you about my usual day.</p>
+      <img src="anna-waking-up.jpg" class="blog-img" alt="Anna waking up" onerror="this.style.display='none'">
+      <p class="text-sentence"><strong>Morning.</strong> Every day I get up early, at 6 o'clock in the morning.</p>
+      <img src="anna-window.jpg" class="blog-img" alt="Anna at window" onerror="this.style.display='none'">
+      <p class="text-sentence">I open the window and breathe in the <strong>fresh air</strong>. It's so clean here, not like in the city where there is <strong>pollution</strong> and <strong>heavy traffic</strong>.</p>
+      <img src="anna-school.jpg" class="blog-img" alt="Anna school" onerror="this.style.display='none'">
+      <p class="text-sentence">After breakfast, my mum takes me to school by car. The school is in the next village, 5 kilometres away. There are only 20 children in my school. It's very small, but I like it.</p>
+      <img src="anna-farmyard.jpg" class="blog-img" alt="Anna farmyard" onerror="this.style.display='none'">
+      <p class="text-sentence"><strong>Afternoon — Farm Work.</strong> In the afternoon, I come back home from school and help my parents on the <strong>farm</strong>. We have cows and chickens. First, I go to the <strong>farmyard</strong> and help my dad <strong>milk the cows</strong>.</p>
+      <img src="anna-barn.jpg" class="blog-img" alt="Anna barn" onerror="this.style.display='none'">
+      <p class="text-sentence">Then I go to the <strong>barn</strong> to <strong>feed the chickens</strong>. It's hard work, and sometimes I <strong>can't stand the smell</strong>, but I love our animals.</p>
+      <img src="anna-dog.jpg" class="blog-img" alt="Anna dog" onerror="this.style.display='none'">
+      <p class="text-sentence"><strong>Evening.</strong> After the farm work, I have dinner with my family. There aren't many children in my village, so sometimes I feel <strong>isolated</strong> and lonely. But I have Rex! We play together in the <strong>fields</strong> every evening. He is my best friend.</p>
+      <img src="anna-town.jpg" class="blog-img" alt="Anna town" onerror="this.style.display='none'">
+      <p class="text-sentence"><strong>Weekend.</strong> At the weekend, I sometimes go to the town with my parents. My dad drives our old car. The town is always <strong>crowded</strong> and <strong>noisy</strong>. There is so much <strong>hustle and bustle</strong>! I don't like it there. I prefer the <strong>peace and quiet</strong> of the countryside.</p>
+      <p class="text-sentence">So this is my life. The fresh air, the green fields, the beautiful sunsets, and my dog Rex. I'm happy here. What about you? Do you live in a city or a village?</p>
+    </div>
+  </div>
+
+  <!-- Vocab Match -->
+  <div id="tab-vocab" class="tab-content">
+    <h3>Match the word with its definition</h3>
+    <div id="vocabMatchContainer"></div>
+    <p id="vocabFeedback" class="feedback"></p>
+    <button class="btn btn-orange" id="resetVocabBtn">Reset</button>
+  </div>
+
+  <!-- True/False -->
+  <div id="tab-truefalse" class="tab-content">
+    <h3>True or False?</h3>
+    <div id="tfContainer"></div>
+    <button class="btn btn-orange" id="nextTFBtn">Next</button>
+  </div>
+
+  <!-- Questions -->
+  <div id="tab-questions" class="tab-content">
+    <h3>Answer the questions</h3>
+    <div id="questionsContainer"></div>
+    <button class="btn btn-orange" id="nextQBtn">Next</button>
+  </div>
+
+  <!-- Fill Gaps -->
+  <div id="tab-fill" class="tab-content">
+    <h3>Fill in the gaps</h3>
+    <div id="fillContainer"></div>
+    <button class="btn btn-orange" id="nextFillBtn">Next</button>
+  </div>
+
+  <!-- Choose Tense -->
+  <div id="tab-tense" class="tab-content">
+    <h3>Choose the correct tense</h3>
+    <div id="tenseContainer"></div>
+    <button class="btn btn-orange" id="nextTenseBtn">Next</button>
+  </div>
+
+  <!-- Translate -->
+  <div id="tab-translate" class="tab-content">
+    <h3>Translate into English</h3>
+    <div id="translateContainer"></div>
+    <button class="btn btn-orange" id="nextTransBtn">Next</button>
+  </div>
+
+  <!-- Retelling -->
+  <div id="tab-retell" class="tab-content">
+    <h3>Retell the story</h3>
+    <div class="level-btns">
+      <button class="btn-outline active level-btn" data-level="1">Level 1</button>
+      <button class="btn-outline level-btn" data-level="2">Level 2</button>
+      <button class="btn-outline level-btn" data-level="3">Level 3</button>
+    </div>
+    <div id="retellLevel1" class="retell-plan">
+      <p>1. Name / where she lives</p>
+      <p>2. What is she doing right now? <span style="color:#e67e22;">(sitting, writing, sun setting, Rex sleeping)</span></p>
+      <p>3. What does she do every morning? <span style="color:#e67e22;">(get up, fresh air, school)</span></p>
+      <p>4. What does she do after school? <span style="color:#e67e22;">(farmyard, milk cows, barn, feed chickens)</span></p>
+      <p>5. Why does she feel isolated? <span style="color:#e67e22;">(not many children)</span></p>
+      <p>6. Who is her best friend? <span style="color:#e67e22;">(Rex, play in the fields)</span></p>
+      <p>7. Why doesn't she like the town? <span style="color:#e67e22;">(crowded, noisy, hustle and bustle, prefers countryside)</span></p>
+    </div>
+    <div id="retellLevel2" class="retell-plan retell-hidden">
+      <p>1. Name / where she lives</p>
+      <p>2. What is she doing right now?</p>
+      <p>3. What does she do every morning?</p>
+      <p>4. What does she do after school?</p>
+      <p>5. Why does she feel isolated?</p>
+      <p>6. Who is her best friend?</p>
+      <p>7. Why doesn't she like the town?</p>
+    </div>
+    <div id="retellLevel3" class="retell-plan retell-hidden">
+      <p>Anna · village · sitting · writing · sun setting · Rex sleeping · get up early · fresh air · school · farmyard · milk cows · barn · feed chickens · isolated · Rex · fields · town · crowded · noisy · hustle and bustle · peace and quiet</p>
+    </div>
+    <p style="text-align:center;color:#7f8c8d;">🗣️ Retell the text orally! Teacher checks.</p>
+  </div>
+
+  <div class="home-btn"></div>
+</div>
+
+<script>
+  // ========== TABS ==========
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ========== AUDIO ==========
+  let isPlaying = false, currentSent = 0;
+  const sentences = document.querySelectorAll('.text-sentence');
+  document.getElementById('audioBtn').addEventListener('click', () => {
+    if (isPlaying) { speechSynthesis.cancel(); isPlaying = false; document.getElementById('audioBtn').textContent = '🔊 Play Audio'; sentences.forEach(s => s.classList.remove('highlight')); return; }
+    isPlaying = true; document.getElementById('audioBtn').textContent = '⏸️ Pause'; currentSent = 0; speakNext();
+  });
+  function speakNext() {
+    if (!isPlaying || currentSent >= sentences.length) { isPlaying = false; document.getElementById('audioBtn').textContent = '🔊 Play Audio'; sentences.forEach(s => s.classList.remove('highlight')); return; }
+    sentences.forEach(s => s.classList.remove('highlight'));
+    sentences[currentSent].classList.add('highlight');
+    const u = new SpeechSynthesisUtterance(sentences[currentSent].textContent);
+    u.lang = 'en-US'; u.rate = 0.85;
+    u.onend = () => { currentSent++; speakNext(); };
+    u.onerror = () => { currentSent++; speakNext(); };
+    speechSynthesis.speak(u);
+  }
+
+  // ========== SOUNDS ==========
+  let actx;
+  function ctx() { if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)(); return actx; }
+  function okSound() {
+    const c = ctx(), o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination); o.type = 'sine';
+    o.frequency.setValueAtTime(523, c.currentTime); o.frequency.setValueAtTime(659, c.currentTime+0.1); o.frequency.setValueAtTime(784, c.currentTime+0.2);
+    g.gain.setValueAtTime(0.4, c.currentTime); g.gain.exponentialRampToValueAtTime(0.01, c.currentTime+0.3);
+    o.start(c.currentTime); o.stop(c.currentTime+0.3);
+  }
+  function errSound() {
+    const c = ctx(), o = c.createOscillator(), g = c.createGain();
+    o.connect(g); g.connect(c.destination); o.type = 'square';
+    o.frequency.setValueAtTime(200, c.currentTime); o.frequency.setValueAtTime(180, c.currentTime+0.1);
+    g.gain.setValueAtTime(0.3, c.currentTime); g.gain.exponentialRampToValueAtTime(0.01, c.currentTime+0.2);
+    o.start(c.currentTime); o.stop(c.currentTime+0.2);
+  }
+
+  // ========== VOCAB MATCH ==========
+  const vocabPairs = [
+    {word:'get up early', def:'wake up at 6 or 7 in the morning'},
+    {word:'farmyard', def:'an area near the farmhouse with animals'},
+    {word:'milk the cows', def:'take milk from cows'},
+    {word:'barn', def:'a big building on a farm for animals'},
+    {word:'feed the chickens', def:'give food to chickens'},
+    {word:'can\'t stand the smell', def:'really dislike the bad smell'},
+    {word:'isolated', def:'feeling alone, far from other people'},
+    {word:'hustle and bustle', def:'busy, noisy activity in a city'}
+  ];
+  let vSel = null, vCount = 0;
+  const vColors = ['#e67e22','#8e44ad','#2980b9','#27ae60','#c0392b','#f39c12','#1abc9c','#d35400'];
+  function createVocab() {
+    const cont = document.getElementById('vocabMatchContainer');
+    cont.innerHTML = ''; document.getElementById('vocabFeedback').textContent = ''; vCount = 0;
+    const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:20px;justify-content:center;flex-wrap:wrap;';
+    const left = document.createElement('div'); left.className = 'match-column';
+    const right = document.createElement('div'); right.className = 'match-column';
+    const wShuff = [...vocabPairs].sort(()=>Math.random()-0.5);
+    const dShuff = [...vocabPairs].sort(()=>Math.random()-0.5);
+    wShuff.forEach(p => {
+      const el = document.createElement('div'); el.className = 'match-item'; el.textContent = p.word; el.dataset.word = p.word;
+      el.addEventListener('click', function(){ if(this.classList.contains('matched')) return; if(vSel) vSel.classList.remove('selected'); vSel = this; this.classList.add('selected'); });
+      left.appendChild(el);
+    });
+    dShuff.forEach(p => {
+      const el = document.createElement('div'); el.className = 'match-item'; el.textContent = p.def; el.dataset.word = p.word;
+      el.addEventListener('click', function(){
+        if(!vSel || this.classList.contains('matched')) return;
+        if(vSel.dataset.word === this.dataset.word){
+          const ci = vocabPairs.findIndex(x=>x.word===vSel.dataset.word);
+          const col = vColors[ci % vColors.length];
+          vSel.style.background = col; vSel.style.color = 'white'; vSel.classList.add('matched'); vSel.classList.remove('selected');
+          this.style.background = col; this.style.color = 'white'; this.classList.add('matched');
+          vCount++; okSound(); vSel = null;
+          if(vCount === vocabPairs.length) document.getElementById('vocabFeedback').textContent = '🎉 All matched!';
+        } else { errSound(); vSel.classList.remove('selected'); vSel = null; }
+      });
+      right.appendChild(el);
+    });
+    row.appendChild(left); row.appendChild(right); cont.appendChild(row);
+  }
+  document.getElementById('resetVocabBtn').addEventListener('click', createVocab);
+
+  // ========== TRUE/FALSE ==========
+  const tfData = [
+    {text:'Anna lives in a big city.', ans:false},
+    {text:'Right now, she is writing a story.', ans:true},
+    {text:'She gets up at 8 o\'clock every day.', ans:false},
+    {text:'Anna\'s mum takes her to school by bus.', ans:false},
+    {text:'Anna milks the cows in the morning before school.', ans:false},
+    {text:'She feeds the chickens in the barn.', ans:true},
+    {text:'Anna feels isolated because there aren\'t many children in her village.', ans:true},
+    {text:'She loves the hustle and bustle of the town.', ans:false}
+  ];
+  let tfI = 0;
+  function showTF() {
+    const c = document.getElementById('tfContainer'); c.innerHTML = '';
+    const s = tfData[tfI % tfData.length];
+    const p = document.createElement('p'); p.style.cssText = 'font-size:clamp(18px,3vw,22px);text-align:center;font-weight:bold;margin:15px 0;';
+    p.textContent = s.text; c.appendChild(p);
+    const row = document.createElement('div'); row.style.cssText = 'display:flex;gap:15px;justify-content:center;';
+    const t = document.createElement('button'); t.className = 'btn btn-orange'; t.textContent = '✅ True';
+    const f = document.createElement('button'); f.className = 'btn btn-orange'; f.textContent = '❌ False';
+    t.addEventListener('click',()=>{ const fb = document.createElement('p'); fb.className = 'feedback'; if(true===s.ans){ fb.textContent='✅ Correct!'; fb.style.color='#27ae60'; okSound(); } else { fb.textContent='❌ Try again!'; fb.style.color='#c0392b'; errSound(); } c.appendChild(fb); });
+    f.addEventListener('click',()=>{ const fb = document.createElement('p'); fb.className = 'feedback'; if(false===s.ans){ fb.textContent='✅ Correct!'; fb.style.color='#27ae60'; okSound(); } else { fb.textContent='❌ Try again!'; fb.style.color='#c0392b'; errSound(); } c.appendChild(fb); });
+    row.appendChild(t); row.appendChild(f); c.appendChild(row); tfI++;
+  }
+  document.getElementById('nextTFBtn').addEventListener('click', showTF);
+
+  // ========== QUESTIONS (10) ==========
+  const qData = [
+    {q:'Where does Anna live?', a:['in a village','in a small village','she lives in a village','she lives in a small village']},
+    {q:'What is Anna doing right now?', a:['writing a story','she is writing a story','she is sitting in her room and writing']},
+    {q:'What time does she get up every day?', a:['at 6','at 6 o\'clock','at six']},
+    {q:'How does Anna get to school?', a:['by car','her mum takes her by car']},
+    {q:'What does Anna do on the farm in the afternoon?', a:['milks the cows','feeds the chickens','she milks the cows and feeds the chickens']},
+    {q:'Why does Anna feel isolated?', a:['there aren\'t many children','not many children','because there aren\'t many children']},
+    {q:'Who is Anna\'s best friend?', a:['Rex','her dog','her dog Rex']},
+    {q:'Why doesn\'t Anna like the town?', a:['it is crowded and noisy','too much hustle and bustle','it\'s too noisy and crowded']},
+    {q:'What can Anna hear when she writes her story?', a:['birds singing','the birds singing','she can hear birds singing']},
+    {q:'What does Anna prefer — city or countryside?', a:['countryside','she prefers the countryside','she prefers the peace and quiet of the countryside']}
+  ];
+  let qI = 0;
+  function showQ() {
+    const c = document.getElementById('questionsContainer'); c.innerHTML = '';
+    const item = qData[qI % qData.length];
+    const card = document.createElement('div'); card.className = 'choose-card';
+    card.innerHTML = `<p style="font-weight:bold;">${item.q}</p>`;
+    const inp = document.createElement('input'); inp.className = 'transform-input'; inp.placeholder = 'Your answer...';
+    const btn = document.createElement('button'); btn.className = 'btn btn-orange'; btn.textContent = 'Check';
+    btn.addEventListener('click',()=>{
+      const fb = document.createElement('p'); fb.className = 'feedback';
+      if(item.a.some(a=>inp.value.trim().toLowerCase()===a.toLowerCase())){ fb.textContent='✅ Correct!'; fb.style.color='#27ae60'; okSound(); }
+      else { fb.textContent='❌ Possible: '+item.a[0]; fb.style.color='#c0392b'; errSound(); }
+      c.appendChild(fb);
+    });
+    card.appendChild(inp); card.appendChild(btn); c.appendChild(card); qI++;
+  }
+  document.getElementById('nextQBtn').addEventListener('click', showQ);
+
+  // ========== FILL GAPS (исправлено, 10 предложений) ==========
+  const fillData = [
+    {text:'Anna ___ in a small village.', gap:'lives', opts:['lives','live','living']},
+    {text:'Right now, she ___ sitting in her room.', gap:'is', opts:['is','are','am']},
+    {text:'Every day she ___ up at 6 o\'clock.', gap:'gets', opts:['get','gets','got']},
+    {text:'After school, she helps her dad ___ the cows.', gap:'milk', opts:['milk','milks','milking']},
+    {text:'She goes to the ___ to feed the chickens.', gap:'barn', opts:['farmyard','barn','school']},
+    {text:'Anna can\'t ___ the smell on the farm.', gap:'stand', opts:['stand','like','make']},
+    {text:'There aren\'t many children, so she feels ___.', gap:'isolated', opts:['happy','isolated','busy']},
+    {text:'The town has too much ___ and bustle.', gap:'hustle', opts:['peace','hustle','quiet']},
+    {text:'Anna ___ the hustle and bustle of the town.', gap:'doesn\'t like', opts:['likes','doesn\'t like','don\'t like']},
+    {text:'Rex is ___ on the floor next to Anna.', gap:'sleeping', opts:['sleep','sleeps','sleeping']}
+  ];
+  let fI = 0, fShuff = [];
+  function showFill() {
+    const c = document.getElementById('fillContainer');
+    if(fI===0) fShuff = [...fillData].sort(()=>Math.random()-0.5);
+    if(fI >= fShuff.length) { c.innerHTML = '<p style="font-size:clamp(18px,3vw,24px);text-align:center;">🎉 All completed!</p>'; return; }
+    c.innerHTML = '';
+    const item = fShuff[fI];
+    const card = document.createElement('div'); card.className = 'choose-card';
+    const parts = item.text.split('___');
+    const beforeSpan = document.createElement('span'); beforeSpan.textContent = parts[0]; card.appendChild(beforeSpan);
+    const sel = document.createElement('select'); sel.className = 'select-tense';
+    const ph = document.createElement('option'); ph.textContent = '...'; ph.value = ''; ph.disabled = true; ph.selected = true;
+    sel.appendChild(ph);
+    item.opts.forEach(o => { const op = document.createElement('option'); op.value = o; op.textContent = o; sel.appendChild(op); });
+    sel.addEventListener('change', function(e){
+      if(e.target.value === item.gap){
+        e.target.style.background = '#27ae60'; e.target.style.color = 'white'; e.target.disabled = true;
+        okSound(); fI++; setTimeout(showFill, 800);
+      } else { e.target.style.background = '#c0392b'; e.target.style.color = 'white'; errSound(); setTimeout(()=>{ e.target.style.background = 'white'; e.target.style.color = '#2c3e50'; e.target.value = ''; }, 1000); }
+    });
+    card.appendChild(sel);
+    if(parts[1]) { const afterSpan = document.createElement('span'); afterSpan.textContent = parts[1]; card.appendChild(afterSpan); }
+    c.appendChild(card);
+  }
+  document.getElementById('nextFillBtn').addEventListener('click', ()=>{ fI++; showFill(); });
+
+  // ========== TENSE (15 предложений: утверд., отриц., вопрос.) ==========
+  const tenseData = [
+    {text:'Right now, Anna ___ (sit) in her room.', ans:'is sitting', opts:['is sitting','sits','sit']},
+    {text:'Every day she ___ (get up) at 6 o\'clock.', ans:'gets up', opts:['get up','gets up','is getting up']},
+    {text:'At the moment, Rex ___ (sleep) on the floor.', ans:'is sleeping', opts:['sleeps','is sleeping','sleep']},
+    {text:'Anna\'s mum ___ (take) her to school every morning.', ans:'takes', opts:['take','takes','is taking']},
+    {text:'Look! The sun ___ (set) outside.', ans:'is setting', opts:['sets','is setting','set']},
+    {text:'Anna and Rex ___ (play) in the fields every evening.', ans:'play', opts:['play','plays','are playing']},
+    {text:'Anna ___ (not like) the hustle and bustle of the town.', ans:'doesn\'t like', opts:['don\'t like','doesn\'t like','isn\'t liking']},
+    {text:'Right now, I ___ (write) this story for you.', ans:'am writing', opts:['write','writes','am writing']},
+    {text:'___ Anna ___ (live) in a city?', ans:'Does ... live', opts:['Does ... live','Do ... live','Is ... living']},
+    {text:'The birds ___ (sing) at the moment.', ans:'are singing', opts:['sing','sings','are singing']},
+    {text:'Anna ___ (not go) to the town often.', ans:'doesn\'t go', opts:['doesn\'t go','don\'t go','isn\'t going']},
+    {text:'___ the village ___ (go) to sleep now?', ans:'Is ... going', opts:['Is ... going','Does ... go','Are ... going']},
+    {text:'Her dad ___ (drive) the car at weekends.', ans:'drives', opts:['drive','drives','is driving']},
+    {text:'Anna ___ (can\'t stand) the smell on the farm.', ans:'can\'t stand', opts:['can\'t stand','isn\'t standing','doesn\'t stand']},
+    {text:'___ Anna and Rex ___ (play) right now?', ans:'Are ... playing', opts:['Are ... playing','Do ... play','Is ... playing']}
+  ];
+  let tI = 0, tShuff = [];
+  function showTense() {
+    const c = document.getElementById('tenseContainer');
+    if(tI===0) tShuff = [...tenseData].sort(()=>Math.random()-0.5);
+    if(tI >= tShuff.length) { c.innerHTML = '<p style="font-size:clamp(18px,3vw,24px);text-align:center;">🎉 All done!</p>'; return; }
+    c.innerHTML = '';
+    const item = tShuff[tI];
+    const card = document.createElement('div'); card.className = 'choose-card';
+    card.innerHTML = item.text;
+    const sel = document.createElement('select'); sel.className = 'select-tense';
+    const ph = document.createElement('option'); ph.textContent = '...'; ph.value = ''; ph.disabled = true; ph.selected = true;
+    sel.appendChild(ph);
+    item.opts.forEach(o => { const op = document.createElement('option'); op.value = o; op.textContent = o; sel.appendChild(op); });
+    sel.addEventListener('change', function(e){
+      if(e.target.value === item.ans){
+        e.target.style.background = '#27ae60'; e.target.style.color = 'white'; e.target.disabled = true;
+        okSound(); tI++; setTimeout(showTense, 800);
+      } else { e.target.style.background = '#c0392b'; e.target.style.color = 'white'; errSound(); setTimeout(()=>{ e.target.style.background = 'white'; e.target.style.color = '#2c3e50'; e.target.value = ''; }, 1000); }
+    });
+    card.appendChild(sel); c.appendChild(card);
+  }
+  document.getElementById('nextTenseBtn').addEventListener('click', ()=>{ tI++; showTense(); });
+
+  // ========== TRANSLATE ==========
+  const transData = [
+    {ru:'Анна живёт в маленькой деревне.', en:['Anna lives in a small village.']},
+    {ru:'Прямо сейчас она сидит в своей комнате и пишет рассказ.', en:['Right now she is sitting in her room and writing a story.']},
+    {ru:'Каждый день она встаёт рано утром.', en:['Every day she gets up early in the morning.']},
+    {ru:'После школы она помогает папе доить коров.', en:['After school she helps her dad milk the cows.']},
+    {ru:'Она идёт в сарай кормить кур.', en:['She goes to the barn to feed the chickens.']},
+    {ru:'Иногда Анна чувствует себя одинокой.', en:['Sometimes Anna feels isolated.']},
+    {ru:'Она не любит шум и суету города.', en:['She doesn\'t like the hustle and bustle of the town.']},
+    {ru:'По вечерам она играет с Рексом в полях.', en:['In the evenings she plays with Rex in the fields.']}
+  ];
+  let trI = 0, trShuff = [];
+  function showTrans() {
+    const c = document.getElementById('translateContainer');
+    if(trI===0) trShuff = [...transData].sort(()=>Math.random()-0.5);
+    if(trI >= trShuff.length) { c.innerHTML = '<p style="font-size:clamp(18px,3vw,24px);text-align:center;">🎉 All translated!</p>'; return; }
+    c.innerHTML = '';
+    const item = trShuff[trI];
+    const card = document.createElement('div'); card.className = 'translate-card';
+    card.innerHTML = `<p style="font-weight:bold;">${item.ru}</p>`;
+    const inp = document.createElement('input'); inp.className = 'translate-input'; inp.placeholder = 'Translate...';
+    const btn = document.createElement('button'); btn.className = 'btn btn-orange'; btn.textContent = 'Check';
+    btn.addEventListener('click',()=>{
+      const fb = document.createElement('p'); fb.className = 'feedback';
+      if(item.en.some(e=>inp.value.trim().toLowerCase()===e.toLowerCase())){ fb.textContent='✅ Correct!'; fb.style.color='#27ae60'; okSound(); trI++; setTimeout(showTrans, 1000); }
+      else { fb.textContent='❌ Correct: '+item.en[0]; fb.style.color='#c0392b'; errSound(); }
+      c.appendChild(fb);
+    });
+    card.appendChild(inp); card.appendChild(btn); c.appendChild(card);
+  }
+  document.getElementById('nextTransBtn').addEventListener('click', ()=>{ trI++; showTrans(); });
+
+  // ========== RETELLING LEVELS ==========
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('retellLevel1').classList.add('retell-hidden');
+      document.getElementById('retellLevel2').classList.add('retell-hidden');
+      document.getElementById('retellLevel3').classList.add('retell-hidden');
+      document.getElementById('retellLevel'+btn.dataset.level).classList.remove('retell-hidden');
+    });
+  });
+
+  // ========== INIT ==========
+  createVocab(); showTF(); showQ(); showFill(); showTense(); showTrans();
+</script>
+</body>
+</html>
